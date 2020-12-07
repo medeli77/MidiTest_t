@@ -1,5 +1,8 @@
 
 $(function(){
+	
+	var temp_Over_Val = 90; //Loop延时测试超过90ms就会标记停止
+	var temp_Over_Count = 4; //设置多显示5个数据后执行停止，便于排查问题
 
 	// header 
 	var connect = $("#connect");
@@ -85,9 +88,6 @@ $(function(){
 	var temp_loop_vval = 0;
 	var temp_Over_flag = 0;
 	var temp_Over_step = 0;
-
-	var temp_Over_Val = 90;
-	var temp_Over_Count = 4;
 
 	// var fso = new ActiveXObject(Scripting.FileSystemObject);
 
