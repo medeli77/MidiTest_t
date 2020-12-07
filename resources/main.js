@@ -86,7 +86,7 @@ $(function(){
 	var temp_Over_flag = 0;
 	var temp_Over_step = 0;
 
-	var temp_Over_Val = 5;
+	var temp_Over_Val = 90;
 	var temp_Over_Count = 4;
 
 	// var fso = new ActiveXObject(Scripting.FileSystemObject);
