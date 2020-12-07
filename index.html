@@ -1,0 +1,169 @@
+<html>
+<html>
+<head>
+	<title>MIDITest</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="requiresActiveX=true"/>
+	<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+
+	<link rel="shortcut icon" type="image/x-icon" href="./resources/ble.ico">
+
+	<!-- Bootstrap -->
+	<script type="text/javascript" src="./resources/jquery.min.js"></script>
+	<link rel="stylesheet" href="./resources/bootstrap/css/bootstrap.css">
+	<script src="./resources/bootstrap/js/bootstrap.min.js"></script>
+
+	<!-- WebMIDI -->
+	<script type="text/javascript" src="./resources/webmidi.min.js"></script>
+	<script type="text/javascript" src="./resources/timbre.min.js"></script>
+
+
+
+
+	<!-- my css -->
+	<style type="text/css">
+	body {
+		background-color: #eee;
+	}
+	#devices {
+		background-color: #5bc0de;
+	}
+	.badge {
+		background-color: red;
+	}
+	#currentDev{
+		border-radius: 0;
+		font-size: 16px;
+		color: green;
+	}
+</style>
+</head>
+<body>
+	<div class="row col-md-12" style="">
+		<div class="btn-group col-md-2 " role="group" aria-label="...">
+			<div class="btn-group" role="group">
+				<button type="button" id="connect" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<strong>MIDI Connection</strong>
+					<span class="caret"></span>
+				</button>
+				<ul id="devices" class="dropdown-menu"></ul>
+			</div>
+		</div>
+		<button type="button" id="currentDev" class="btn btn-default col-md-2" style="font-size: 19px; font-weight: bold; padding: 2px; color: red;" disabled="disabled">No MIDI Decice</button>
+		<button type="button" id="audio" class="btn btn-primary col-md-1 col-md-offset-6"><strong>Audio</strong></button>
+		<button type="button" id="refresh" class="btn btn-primary col-md-1"><strong>Refresh</strong></button>
+	</div>
+
+	<div class="row" style="">
+		<div class="panel panel-default col-md-12" style="border: 4px solid #aaa; background-color: black">
+			<div class="panel-heading col-md-12" style="background-color: #bbb; margin-top: 1px;">
+				<h3 class="panel-title" style="color: purple;">
+					<span class="col-md-2" id="outputHeader">
+						<strong>OUTPUT--AREA</strong>
+						<span class="glyphicon glyphicon-triangle-bottom" id="arrow1" aria-hidden="true"></span>
+					</span>
+					<span class="col-md-3 col-md-offset-7">
+						<button id="continue" class="btn btn-danger col-md-5" style="text-align:center; line-height: 80%; vertical-align: -10%;">
+							<strong>Continue</strong>
+							<span id="continueSign" class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="text-align:center; line-height: 80%; vertical-align: -10%;"></span>
+						</button>
+						<button id="loop" class="btn btn-danger col-md-5 col-md-offset-1" style="text-align:center; line-height: 80%; vertical-align: -10%;">
+							<strong>Loop</strong>
+							<span id="loopSign" class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="text-align:center; line-height: 80%; vertical-align: -10%;"></span>
+						</button>
+					</span>
+				</h3>	
+
+			</div>
+			<div class="panel-body" id="outputBody">
+				<div class="btn-group btn-group-justified " role="group" aria-label="...">
+					<div class="btn-group" role="group">
+						<button type="button" id="noteon" class="btn" style="background-color: #06ff06;"><strong>Note On C3</strong></button>
+					</div>
+					<div class="btn-group" role="group">
+						<button type="button" id="noteoff" class="btn" style="background-color: #009797;"><strong>Note Off C3</strong></button>
+					</div>
+					<div class="btn-group" role="group">
+						<button type="button" id="serial" class="btn" style="background-color: #FFFF8E;"><strong>Serial Number (sysEx)</strong></button>
+					</div>
+					<div class="btn-group" role="group">
+						<button type="button" id="continuity" class="btn" style="background-color: #06ff06;"><strong>Note On C3 Continuity</strong></button>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12" style="margin-top: 10px;">
+						<div class="input-group">
+							<input type="text" id="message" class="form-control" placeholder="eg: 90 3C 7F or F0 01 02 03 F7">
+							<span class="input-group-btn">
+								<button id="send" class="btn btn-primary" type="button"><strong>Just Send</strong></button>
+							</span>
+						</div>
+					</div>							
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row" style="position: relative; margin-top: -30px;">
+		<div class="panel panel-default col-md-12" style="border: 4px solid #aaa; background-color: black;">
+			<div class="panel-heading col-md-12" style=" background-color: #bbb; margin-top: 1px;">
+				<h3 class="panel-title" style="color: purple">
+					<span class="col-md-2" id="inputHeader">
+						<strong>INPUT--AREA</strong>
+						<span class="glyphicon glyphicon-triangle-bottom" id="arrow2" aria-hidden="true"></span>
+					</span>
+					<span class="col-md-3 col-md-offset-7">
+						<button id="clear" class="btn btn-primary col-md-5" style="text-align:center; line-height: 80%">
+							<strong>Clear</strong>
+						</button>
+						<button id="reset" class="btn btn-primary col-md-5 col-md-offset-1" style="text-align:center; line-height: 80%">
+							<strong>Reset</strong>
+						</button>
+					</span>
+				</h3>
+			</div>
+			<div id="inputBody" class="panel-body" style="margin-top: -15px;">
+				<div class="row" style="background-color: #5bc0de; text-align: center; border-radius: 5px;">
+					<div class="col-xs-1 col-xs-offset-1">
+						<h4><strong>8n</strong><span id="Noteoff_show" class="badge">0</span></h4>
+					</div>
+					<div class="col-xs-1">
+						<h4><strong>9n</strong><span id="Noteon_show" class="badge">0</span></h4>
+					</div>
+					<div class="col-xs-1">
+						<h4><strong>An</strong><span id="An_show" class="badge">0</span></h4>
+					</div>
+					<div class="col-xs-1">
+						<h4><strong>Bn</strong><span id="Bn_show" class="badge">0</span></h4>
+					</div>
+					<div class="col-xs-1">
+						<h4><strong>Cn</strong><span id="Cn_show" class="badge">0</span></h4>
+					</div>
+					<div class="col-xs-1">
+						<h4><strong>Dn</strong><span id="Dn_show" class="badge">0</span></h4>
+					</div>
+					<div class="col-xs-1">
+						<h4><strong>En</strong><span id="En_show" class="badge">0</span></h4>
+					</div>
+					<div class="col-xs-1">
+						<h4><strong>SyEx</strong><span id="Sysex_show" class="badge">0</span></h4>
+					</div>
+				</div>
+				<div id="show" class="" style="padding-left: 5%; height: 55%; overflow: auto; font-size: 18px;font-weight: bold;">
+
+				</div>			
+			</div>	
+		</div>
+	</div>
+
+
+
+	<!-- main js -->
+	<script type="text/javascript" src="./resources/main.js"></script>
+</body>
+</html>
+
+
+
+
